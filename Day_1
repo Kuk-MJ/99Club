@@ -1,0 +1,99 @@
+# StudyGroup Day 1!
+
+#1. 타임머신
+# https://www.acmicpc.net/problem/11657
+
+import sys
+input = sys.stdin.readline
+
+def Velman_Ford(mode):   # 사용자 정의 벨만-포드 탐색 함수
+    is_changed = 0   # 최단 거리 갱신 여부 변수 생성
+
+    for i in range(N):
+        for e in bus_weight[i+1]:   # 모든 간선 탐색
+
+            tmp_min = e[2] + city_O_min[e[0]][0]   # 임시 최단 경로 거리 계산
+            
+            if city_O_min[e[1]][0] > tmp_min:   # 현재 최단 경로 거리보다 작을 때
+            
+                if mode:             # '갱신 탐지' 모드일 경우 
+                    is_changed = 1   # 갱신 여부 전환 후 break  
+                    break
+                
+                city_O_min[e[1]][0] = tmp_min   # 최단 경로 거리 갱신
+                city_O_min[e[1]][1] = e[0]      # 직전 중점 갱신
+                
+        if is_changed:   # '갱신 탐지' 확인
+            break
+                    
+    return is_changed if mode else 'Done!'   # 모드에 따른 값 반환
+
+val_inf = float('inf')
+N, M = map(int, input().split())
+bus_weight = [[] for _ in range(N+1)]
+city_O_min = [[0, i] if not i-1 else [val_inf, 'NaN'] for i in range(N+1)]   # 값 입력 및 변수 할당
+city_O_min[0] = ''
+
+  
+for _ in range(M):
+    y, x, w = map(int, input().split())   # 간선 및 가중치 입력
+    bus_weight[y].append((y, x, w))
+    
+# print(city_O_min)
+for _ in range(N-1):
+    Not_over = Velman_Ford(0)   # 벨만-포드 탐색 함수 수행
+    # print(city_O_min)
+    
+if Velman_Ford(1):   # 탐색 이후에도 변화가 감지되었다면
+    print(-1)        # -1 출력
+else:
+    for c_w in city_O_min[2:]:
+        print(c_w[0] if c_w[0] != val_inf else -1)   # 아니라면 1번 제외 최단 경로 출력
+
+# 벨만-포드 알고리즘에 관한 문제.
+# 솔직히 얘기해서 이걸 풀 시점에 다익스트라 알고리즘이 뭔지도 몰랐는데,
+# 이번 기회에 아주 확실히 알게 되었다.
+# 다익스트라와 벨만-포드 모두 그래프 내 특정 한 중점에서 다른 중점까지의 최단 경로를 구하는 알고리즘인데,
+# 다익스트라는 경로 가중치에 음수가 존재하면 사용할 수 없다는 문제가 있지만, 벨만-포드는 사용 가능하다는 장점이 있다.
+# 하지만 알고리즘 상 '벨만-포드로 탐색하는 경로의 경우의 수 ⊇ 다익스트라로 탐색하는 경로의 경우의 수'이기 때문에
+# 시간 복잡도는 다익스트라보다 크다는 단점이 있다.
+# (왜 그런건지, 구체적인 시간 복잡도는 몇인지는 밑에 참고 웹사이트들을 볼 것.)
+# 또한 음수 가중치 특성 상 '음수 순환'이 발생할 수 있는데,
+# 출발 -> 도착의 최단 경로 - 도착 -> 출발의 최단 경로 < 0인 경우 발생하고,
+# 이런 경우 탐색을 진행하면 할수록 출발 -> 도착의 최단 경로 길이는 -무한으로 발산한다.
+# 따라서 이걸 방지하려면 탐색을 N번 수행했을 때 최단 경로 값이 변경되는지 확인하면 되는데,
+# 이유는 중점이 N개인 그래프에서 최단 경로 내 존재하는 간선의 개수는 최대 N-1개이기 때문이다.
+# 하여튼 코드에 부연 설명을 해보자면, 처음엔 간선들을 이중 리스트에 저장하려 했었다.
+# 근데 그러려고 하다보니 '없는 간선'을 구분할 수 없는 문제가 있었고,
+# (간선이 없으면 못 가는거나 매한가지인 inf로 표시되게 했는데, 일단 이걸 보기 위해선 해당 인덱스를 탐색해야 하니...)
+# 시간 소요가 많을 것 같다는 우려가 생겼다. 그렇지 않을까? 중점만 많고 간선이 적을수록 이 문제는 더 커질 터.
+# 그래서 아예 인접 리스트와 비슷한 방식으로 저장했다. 이러면 간선 개수만큼만 탐색하면 되니 훨씬 빠르겠지.
+# 그 외에도 최단 경로 갱신이 올바르게 되기 위해 간선에 시작 지점, 도착 지점, 가중치를 전부 집어넣은 것도 그렇고...
+# (사실 이게 효율적인지는 모르겠다. 없어도 될 듯 한데, 오늘 배운게 너무 많아서 머리가 잘 안 돌아간다.)
+# 간만에 머리 아프지만 즐거운 시간이었다.
+# ...아, 지금 알았네. 벨만이 Velman이 아니라 Bellman이었다. 백준에 제출한건 수정을 못하니 평생 남겠군. ...조금 쪽팔리는데.
+
+
+
+# 원래는 비공개로 작성해야 하지만, TIL 인증을 위해 공개로 하나 작성해본다.
+# 이런건 처음이라 부끄러운걸.
+# 그나저나 챌린저 문제 수준이 저 정도면... 제대로 따라올 수 있을까 조금 걱정된다.
+# 힙도 모르고, 다익스트라도 모르고, 동적 계획법은 아직 제대로 다룰 줄 모르고, 벨만-포드 알고리즘도 처음 들어봤는데,
+# 도대체 다음엔 뭐가 나올까???? 두려워진다.
+# 그래도 오늘 이렇게 푼 거 보면, 아예 불가능한 일은 아니겠지. 열심히 해보자.
+
+
+
+# 참고 웹사이트
+#1. https://gmlwjd9405.github.io/2018/05/10/data-structure-heap.html
+#2. https://m.blog.naver.com/ndb796/221234424646
+#3. https://8iggy.tistory.com/153
+#4. https://great-park.tistory.com/134
+#5. https://10000cow.tistory.com/entry/%EB%B2%A8%EB%A7%8C-%ED%8F%AC%EB%93%9C-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%ED%95%9C-%EC%82%B4%EB%8F%84-%EC%9D%B4%ED%95%B4%ED%95%98%EB%8A%94-%EB%B2%A8%EB%A7%8C-%ED%8F%AC%EB%93%9C-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98Bellman-Ford-Algorithm
+#6. https://jaehee1007.tistory.com/66#%EB%8B%A4%EC%9D%B5%EC%8A%A4%ED%8A%B8%EB%9D%BC%20%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98%20VS%20%EB%B2%A8%EB%A7%8C%20%ED%8F%AC%EB%93%9C%20%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98%20%EB%B9%84%EA%B5%90-1
+#7. https://velog.io/@kimdukbae/%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EB%B2%A8%EB%A7%8C-%ED%8F%AC%EB%93%9C-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-Bellman-Ford-Algorithm
+
+# 타 레벨 문제
+#B. https://school.programmers.co.kr/learn/courses/30/lessons/12916
+#M. https://www.acmicpc.net/problem/2776
+#C. 
