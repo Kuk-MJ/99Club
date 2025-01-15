@@ -1,0 +1,115 @@
+# StudyGroup Day 3!
+
+#3. 네트워크 복구
+# https://www.acmicpc.net/problem/2211
+
+from collections import defaultdict as dd
+import sys
+input = sys.stdin.readline
+
+N, M = map(int, input().split())
+com_ntwk_weight = [[0 if i == j else float('inf') for j in range(N)] for i in range(N)]   # 값 입력 및 변수 할당
+com_ntwk_edge = dd(set)
+
+for _ in range(M):
+    A, B, C = map(int, input().split())
+    com_ntwk_weight[A-1][B-1] = min(com_ntwk_weight[A-1][B-1], C)   # 가중치 및 간선 입력
+    com_ntwk_weight[B-1][A-1] = min(com_ntwk_weight[B-1][A-1], C)
+    com_ntwk_edge[A-1].add(B-1)
+    com_ntwk_edge[B-1].add(A-1)
+    
+# print(com_ntwk_weight)
+# print(com_ntwk_edge)
+    
+spr_ntwk_weight = [ntwk for ntwk in com_ntwk_weight[0]]   # 시작 지점 최단 경로 값, 방문 여부, 간선 저장 변수 생성
+spr_ntwk_unsearched = [bool(i) for i in range(N)]
+spr_ntwk_cnnct = dd(set)
+spr_ntwk_cnnct[0] = com_ntwk_edge[0]
+
+# print(spr_ntwk_weight)
+# print(spr_ntwk_cnnct)
+    
+now_idx = 0
+for _ in range(N-1):
+    prev_idx = now_idx   # 간선 제거를 위한 '직전 중점' 저장 (의미 없어짐)
+    min_weight = min([spr_ntwk_weight[i] for i in range(N) if spr_ntwk_unsearched[i]])   # 현재 방문하지 않은 중점 중 최단 경로 최솟값인 중점 확인
+    now_idx = spr_ntwk_weight.index(min_weight)   # 해당 중점으로 이동, '현재 중점'으로 변경
+    while not spr_ntwk_unsearched[now_idx]:
+        now_idx = spr_ntwk_weight.index(min_weight, now_idx+1)   # 현재 중점이 방문된 중점일 경우 다음 동일 최단 경로 값인 중점으로 변경 (지금 보니 얘도 의미 없어짐. 방문 여부 확인이 중첩되어있군. 수정 요망)
+        
+    spr_ntwk_unsearched[now_idx] = False   # 현재 중점은 방문 처리
+    for next_idx in com_ntwk_edge[now_idx]:   # 현재 중점과 연결된 모든 중점을 '다음 중점'으로 설정
+        new_weight = spr_ntwk_weight[now_idx] + com_ntwk_weight[now_idx][next_idx]   # 현재 중점 최단 경로값과 다음 중점과 연결된 간선 가중치로 새 최단 경로값 생성
+        
+        if new_weight < spr_ntwk_weight[next_idx]:   # 최단 경로 최솟값이 갱신되었을 떄
+            spr_ntwk_weight[next_idx] = new_weight   # 최단 경로 갱신
+            for i in range(N):
+                spr_ntwk_cnnct[i].discard(next_idx)   # 기존에 있던 다음 중점과 연결된 모든 간선 제거
+            spr_ntwk_cnnct[now_idx].add(next_idx)   # 현재 중점과 다음 중점을 연결
+            
+    # print(spr_ntwk_weight)
+            
+# print(spr_ntwk_weight)
+# print(spr_ntwk_cnnct)
+
+print(N-1)   # 간선 개수 출력
+for s in spr_ntwk_cnnct.keys():
+    for e in spr_ntwk_cnnct[s]:   # 간선 출력
+        print(s+1, e+1)
+
+# 아주 전형적인 다익스트라 문제!
+# (백준에선 데이크스트라라고 하더라. 뭐, 어떻게 읽든 상관 없겠지. 국가의 발음 차이일텐데.)
+# 1번째 날에 다익스트라 알고리즘과 벨만-포드 알고리즘에 대해 배웠었지.
+# 저번 벨만-포드는 만족스러운 결과가 나왔지만, 이번 다익스트라는... 음...... 나중에 다시 풀어봐야겠지...?
+# 일단 다익스트라 알고리즘의 구현 과정은 다음과 같다.
+# 시작 중점을 정한 후, 아직 방문하지 않은 노드 중 가장 최단 경로가 작은 중점으로 이동한다.
+# ('해당 조건에 만족하는 중점이 현재 중점에서 갈 수 없다면 어쩌지?'라는 문제가 생길 수도 있는데, 그래프 구조 상 그럴 일은 없다.
+#  애초에 여기서 저장할 때 현재 중점에서 갈 수 없는 중점과의 거리를 'inf', 즉 무한으로 표시하고 있기도 하고.)
+# 그 다음 현재 중점의 최단 경로값과 현재 중점에서 갈 수 있는 중점들의 가중치를 이용, 최단 경로 값이 갱신될 수 있는지 확인하고, 가능하다면 갱신한다.
+# (아마 좋은 자료구조나 탐색 방식을 쓴다면 기존에 방문했던 중점도 확인할 필요는 없을 것 같지만, 아직 난 그럴 실력이 되지 않으므로...)
+# 이걸 모든 중점이 방문될 때까지 반복하면 된다.
+# ...설명이 좀 이상한 것 같지만, 하여튼 기본 골조는 이러하다.
+# 난 구현 과정을 잘 알고 있었기에, 시작 지점에서 다른 중점 간 최단 경로를 구하는 것까진 성공했다.
+# 근데 문제가 있다. 도대체 간선의 개수와 연결된 중점들은 어떻게 구하지? 그건 저장하지 않았는데.
+# 그래서 아예 탐색 진행 중에 중점의 번호를 따로 저장하고, 최단 경로가 갱신되면 그 저장된 중점 값들을 이용해 간선을 지우고 새로 추가했다.
+# (초기값은 시작 중점과 연결된 간선만 남기는 것으로 해결했다. 처음 시점엔 그 간선들이 최단 경로니까.)
+# 이러니까 출력이 문제네. zip 함수를 이용해보려다가, 그냥 관두고 2중 for문 돌렸다. 브루트 포스, 최고야...
+# 얼추 된 거 같아서 제출. 근데 틀렸네? 왜?? 예제는 맞았는데, 음...
+# 조금 더 고민하다가, 질문 게시판에 가서 유저들이 만든 반례를 넣어보기로 했다.
+# 그래서 반례들을 하나하나 넣어보는데, 어? 최단 경로가 제대로 갱신이 안 됐네? 왜지?
+# 아예 출력된 간선을 직접 그려서 찾아보니, 아니 무슨, 두 중점에 간선이 여러 개가 있냐. 그러면 안되는거잖아.
+# 그래서 최솟값인 간선 하나만 저장하도록 개선했고, 최단 경로 거리를 찾는 것까지는 해결되었다.
+# 문제는 연결된 간선들을 어떻게 구하느냐인데...
+# 코드에 설명했다시피 난 직전, 현재, 다음 중점을 이용해 간선을 지웠다.
+# 가만히 보니, 이런 방식은 간선 제거 없이 탐험이 많이 진행되면 지워져야 할 간선이 지워지지 않는다!
+# (구체적으로 말하면, '직전 -> 현재 -> 다음'이 최단 경로일 때는 '직전 -> 다음'을 지울 수 있는데,
+#  저 최단 경로가 조금만 더 길어져도 저장된 중점 정보가 사라져 간선을 지울 수 없게 된다.)
+# 이미 수많은 고민을 하면서 머리가 터져버릴 것 같은 나는, 한가지 꼼수를 생각해냈다.
+# '어차피 최단 경로 특성 상 최대 길이는 중점 개수 - 1이고, 문제 특성 상 간선을 최소한으로 남겨놔야 하니까,
+#  간선 개수는 최대 길이와 동일하니 중점 개수 - 1 하면 되고,
+#  간선 문제는 그 중점과 연결된 모든 간선을 싹 다 지워버리고, 현재 중점과 연결된 간선 하나를 추가하면 되지 않나?'
+# 그래서 무식하게 for문 돌려서 싹 다 지워버리고, 새로 간선을 하나 추가하는 식으로 바꿨다.
+# 결과는 성공. 메모리도 많이 먹고, 시간도 무식하게 많이 걸리지만, 어쨌든 통과했다.
+# 우와... 이거 골드 2네?? 나 골드 2 문제 처음 풀어봐!!
+# 에메랄드 문제는 언제쯤 풀 수 있을까?? 기대된다. 여기서도 에메랄드 문제 주려나???
+
+
+
+# 오늘은 진짜 꾸역꾸역 풀었다. 전날 트라이처럼 되기 싫어서...
+# 그래도 어느 정도는 다익스트라 알고리즘이 뭔지 이해하고 있었기에 가능하다고 생각된다.
+# ...비록 다익스트라 알고리즘을 구현할 땐 힙이나 우선순위 큐 자료구조를 이용한다곤 하지만.
+# 난 저 둘을 모르니 일단 할 수 있는대로 하는 수밖에.
+# 다르게 생각해보면 저 둘 없이 구현한게 더 대단한거 아닐까?
+# 저번 날들처럼, 절대 구현된 코드는 보지 않았다! 개념과 그림을 곁들인 설명만 보고 유추했을 뿐.
+# 그래도, 이걸 실제로 써먹기엔 많이 모자란 코드겠지. 주말에 못 푼 문제들이랑 같이 다시 풀어봐야겠다.
+
+
+
+# 참고 웹사이트
+1. https://www.daleseo.com/python-zip/
+2. https://wjunsea.tistory.com/106
+
+# 타 레벨 문제
+B. https://www.acmicpc.net/problem/2675
+M. https://www.acmicpc.net/problem/11663
+C. 
