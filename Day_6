@@ -1,0 +1,112 @@
+# StudyGroup Day 6!
+
+#6. 특정 최단 경로
+# https://www.acmicpc.net/problem/1504
+
+def Dijkstra(w_li, s_li, cnt):   # 사용자 정의 다익스트라 알고리즘 함수
+
+    for _ in range(cnt-1):
+        now_min = min([w_li[i] for i in range(cnt) if s_li[i]])   # 현재 미탐색된 최단 경로 중점 구하기
+        now_idx = w_li.index(now_min)   # 해당 중점의 인덱스 추출
+        while not s_li[now_idx]:
+            now_idx = w_li.index(now_min, now_idx+1)   # 미탐색된 곳이 발견될 때까지 반복
+
+        for next_idx in graph_edges[now_idx]:
+            w_li[next_idx] = min(w_li[next_idx], w_li[now_idx] + graph_weights[now_idx][next_idx])   # 현재 중점의 최단 경로 갱신
+
+        s_li[now_idx] = 0   # 현재 중점을 탐색됨으로 변경
+    
+
+N, E = map(int, input().split())
+graph_weights = [[0 if j==i else float('inf') for j in range(N)] for i in range(N)]   # 값 입력 및 변수 할당
+graph_edges = [set() for _ in range(N)]
+
+for _ in range(E):
+    a, b, c = map(int, input().split())   # 간선 및 가중치 입력
+
+    graph_weights[a-1][b-1] = c   # 가중치 추가
+    graph_weights[b-1][a-1] = c
+    graph_edges[a-1].add(b-1)     # 간선 추가
+    graph_edges[b-1].add(a-1)
+
+Chk_1, Chk_2 = map(lambda k: int(k)-1, input().split())   # 거쳐야 할 두 중점 입력
+
+min_weight_O = [g_w for g_w in graph_weights[0]]
+min_weight_Chk_1 = [g_w for g_w in graph_weights[Chk_1]]   # 시작점 및 경유 중점 최단 경로 및 탐색 여부 테이블 생성
+min_weight_Chk_2 = [g_w for g_w in graph_weights[Chk_2]]
+unsearched_O = [0 if i == 0 else 1 for i in range(N)]
+unsearched_Chk_1 = [0 if i == Chk_1 else 1 for i in range(N)]
+unsearched_Chk_2 = [0 if i == Chk_2 else 1 for i in range(N)]
+
+Dijkstra(min_weight_O, unsearched_O, N)
+Dijkstra(min_weight_Chk_1, unsearched_Chk_1, N)   # 다익스트라 알고리즘 수행
+Dijkstra(min_weight_Chk_2, unsearched_Chk_2, N)
+
+final_min_weight = min(min_weight_O[Chk_1] + min_weight_Chk_1[Chk_2] + min_weight_Chk_2[N-1], min_weight_O[Chk_2] + min_weight_Chk_2[Chk_1] + min_weight_Chk_1[N-1])   # 두 경로 중 최솟값 확인
+
+print(final_min_weight if final_min_weight != float('inf') else -1)   # 출력
+
+# 다익스트라 알고리즘을 필요로 하는 문제.
+# 하지만 언제나 그렇듯이 그냥 단순한 문제는 아닌데,
+# 1번 중점에서 N번 중점으로 가는 최단 경로를 구하는 것은 같지만,
+# 특정한 두 중점이 주어지면 두 중점을 모두 거치는 최단 경로를 구해야 한다는 것이다.
+# 뭐, 그래봐야 어려울 건 없지. 일단 생각해보았다. 어떻게 해결해야 할까?
+# 처음엔 따로 경로를 저장하는 방식을 생각했다. 저번 '연예인은 힘들어' 문제가 생각나서...
+# 해당 최단 경로에 두 중점이 없으면 없는 경로 취급하는 느낌으로.
+# 그러다가 다른 방법이 떠올랐다. 두 중점 간 모든 간선을 제거한 그래프를 따로 생성하는 것이다!
+# 그렇게 하면 기존 그래프와 해당 그래프를 비교해서 최단 경로가 다른지 비교한 뒤,
+# 둘이 다르다면 해당 두 중점을 지나친게 아닌 것이니 구분할 수 있지 않을까? 싶었다.
+# (근데 생각해보니 어림도 없었지. 두 중점을 연달아 지나쳐야 한다는 법은 없으니까.)
+# 대강 훑어보고 더 생각흘 하던 찰나... 가장 좋은 방법이 떠올랐다.
+# '...그냥 다익스트라를 3번 돌리면 되는거 아닌가?'
+# 반드시 두 중점을 모두 거쳐야 한다는 것은, 해당 중점들이 경유지이자 또다른 시작점이 된다는 이야기고,
+# 그러면 시작점과 중간 중점 2개에 각각 다익스트라 알고리즘을 수행한 뒤,
+# 각자의 최단 경로를 더한 것이 우리가 원하는 최단 경로이지 않을까 싶었다.
+# (중점이 N개 있고, 중점 A, B를 반드시 지나는 1->N 최단 경로를 구한다고 가정하자.
+#  그러면 1이 시작점인 최단 경로, A가 시작점인 최단 경로, B가 시작점인 최단 경로를 구한 뒤,
+#  1->A + A->B + B->N을 하면 1(->A->B)->N이 되지 않을까 하는 논리다.)
+# 그렇지 않을까? 솔직히 흠 잡을 데 없이 완벽하다고 생각한다.
+# 여기까진 좋았는데, 하나 또 궁금증이 생겼다.
+# '중간 지점의 방문 순서에 따라 최단 경로가 달라지지 않을까?' 라고.
+# 또 생각해보자. A->B는 무방향 그래프이니 B->A도 똑같을 것이니 상관 없지만,
+# 1->A와 1->B는 엄연히 다른 이야기다. 그래서 극단적인 그래프 하나를 만들어 검증해보았고,
+# 1->A->B->N과 1->B->A->N의 최단 경로가 다름을 확인했다.
+# 순서가 중요하다면 상관 없겠지만, 문제에선 지정된 두 중점을 방문해야 한다는 말만 있었기 때문에
+# 더 짧은 쪽을 선택하는 것이 중요하여 두 경로 중 짧은 것을 선택하도록 했다.
+# 결과는 2트.
+# 첫 트라이에 방문하지 않은 최단 거리의 중점을 찾는 과정에 문제가 있었지만, 바로 해결했다.
+# 나름 수월하게 통과한건 좋지만 문제는 소요 시간.
+# 내가 구현한 다익스트라 알고리즘은 우선순위 큐나 힙을 사용하지 않아 다음 중점을 탐색하는 과정이 매우 느리다.
+# (그냥 무식하게 방문하지 않은 최단 거리 중점이 나올 때까지 1번부터 탐색을 반복하는 형식이라...)
+# 챌린저나 되서 우선순위 큐나 힙을 구현하지 못한다는게 좀 이상하긴 하지만, 뭐 어쩌겠는가. 못하는건 못하는거지.
+# 아직 못 푼 다익스트라 문제가 남아있으니, 꼭 우선순위 큐나 힙 구현 방법을 습득해서 여기에 적용시켜봐야겠다. 얼마나 빨라지려나?
+
+
+
+# 오늘은 월요일.
+# 정기 스터디 모임과 강의, 보너스 문제가 있는 날이다.
+# 오늘의 보너스 문제는 타 레벨 문제 섹션에 추가했으니 참고하면 되고...
+# 생각보다 어려운 문제였다. 음... 내가 컴퓨터공학적으로 접근하지 않은 탓일까?
+# 수학적으로 접근하면 뭐가 될 줄 알았는데, 알고보니 완전 헛걸음이었다.
+# 언어 불문하고 다른 사람들의 풀이를 보아하니 주사위 수 N의 최대 크기가 작은 것을 이용해
+# 모든 경우의 수를 탐색해가며 풀은 것을 확인할 수 있었다.
+# 남들 풀이까지 전부 봐버렸으니, 내 힘으로 푸는 의미가 퇴색되겠군.
+# 오늘 보너스 문제를 못 풀게 된 건 아쉽지만... 아직 4번이나 더 남아있으니까. 그 때를 대비해서 더 열심히 공부하자.
+
+
+
+# 참고 웹사이트
+1. https://learnx.tistory.com/entry/%ED%86%B5%EA%B3%84%EC%9D%98-%EA%B8%B0%EC%B4%88%EC%9D%B8-%ED%8F%89%EA%B7%A0-%EB%B6%84%EC%82%B0-%ED%91%9C%EC%A4%80%ED%8E%B8%EC%B0%A8
+2. https://hvyair.tistory.com/17
+3. https://www.notion.so/teamsparta/1812dc3ef514808ca4a9c54cd095630c
+4. https://benn.tistory.com/46
+5. https://programming119.tistory.com/196
+6. https://velog.io/@matt2550/%ED%8C%8C%EC%9D%B4%EC%8D%AC-%EC%9D%B4%EC%A7%84%ED%83%90%EC%83%89-%ED%95%84%EC%88%98-bisect
+
+# 타 레벨 문제
+B. https://www.acmicpc.net/problem/27160
+M. https://www.acmicpc.net/problem/1260
+C. 
+B-Ex. https://school.programmers.co.kr/learn/courses/30/lessons/42577
+M-Ex. https://school.programmers.co.kr/learn/courses/30/lessons/43238
+C-Ex. https://school.programmers.co.kr/learn/courses/30/lessons/258709
