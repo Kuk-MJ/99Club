@@ -1,0 +1,153 @@
+StudyGroup Day 8!
+
+#8. 아 맞다 마늘
+# https://www.acmicpc.net/problem/32978
+
+N = int(input())
+ingredients = set(input().split())   # 값 입력
+poot_dat = set(input().split())
+
+print((ingredients - poot_dat).pop())   # 출력
+
+# 해시.
+# 다른 언어는 모르겠지만, 파이썬에선 해시 자료구조 중 하나인 세트가 합집합, 교집합, 차집합 연산이 가능하므로
+# 이를 이용해주면 된다. 일일이 제거해 줄 필요가 없다는 뜻.
+
+
+#8+α. 슈팅 연습
+# https://www.acmicpc.net/problem/32930
+
+N, M = map(int, input().split())   # 값 입력 및 변수 생성
+scores = set()
+coord = (0, 0)
+total = 0
+
+for _ in range(N):
+    scores.add(tuple(map(int, input().split())))   # 과녁 추가
+
+for _ in range(M):
+    max_val = 0
+    max_coord = tuple()   # 최댓값 점수와 매칭되는 좌표 저장 변수 생성
+
+    for scr in scores:
+        tmp_val = (scr[0] - coord[0])**2 + (scr[1] - coord[1])**2   # 점수 계산
+
+        if max_val < tmp_val:   # 최댓값 갱신
+            max_val = tmp_val
+            max_coord = scr
+
+    total += max_val   # 점수 누산
+    coord = max_coord   # 현재 좌표 변경
+    scores.remove(max_coord)   # 과녁 제거
+    scores.add(tuple(map(int, input().split())))   # 새 과녁 추가
+
+print(total)   # 출력
+
+# 비기너가 쉬우니 그냥 하나 더 풀어본 문제.
+# (원래라면 미들러 문제를 풀고 관두려 했지만, 보니까 또 풀어봤던 문제네.
+#  몇 달 전에 풀었던 문제인데, 다시 코드를 보니 좀 조잡해 보이는 DFS를 써서 해결했다.)
+# 그렇다고 특출나게 어려운 건 아니다. 저거보다 좀 더 쉬운 정도?
+# 초기 과녁 추가하고, 현재 위치에 따른 과녁과의 거리 계산하고, 최댓값 찾고, 더하고, 해당하는 과녁 빼고, 새 과녁 넣고...
+# 그게 끝이다.
+# 굳이 배운게 있다면 파이썬에 존재하는 자료 구조 별 주요 메서드의 시간 복잡도를 알아봤다는 점?
+# 당장은 쓸 일이 없지만, 이걸 따져야 할 정도로 빡빡한 조건의 문제가 나오면 쓸모있어지겠지.
+
+
+
+# 오늘도 백트래킹. 근데 봐도봐도 너무 어렵다...
+# 그래프 만들고, 백트래킹을 위한 탐색함 변수를 생성해서 적당히 이용한 것까진 좋았는데,
+# 자식 노드를 어디부터 탐색해야 최댓값을 낼 수 있을지를 구현 못 해서 막혀버렸다.
+# (내가 구현한 DFS의 경우 한 방향만 먼저 시작하도록 고정되어 있는데, 아니 애초에 대부분 그렇지 않나??
+#  어느 쪽으로 가야 이득일지 어떻게 파악해야 하나 감이 안 잡히니 원...)
+# 전중후위 순회까지 떠올려가며 다 고려해봤지만, 도저히 답이 나오지 않아서 중단.
+# 그렇게 다른 난이도 문제 풀고... 갑자기 궁금증이 들어서 공유한 TIL을 보다, 파이썬 챌린저 분이 공유한 TIL이 봤길래 별 생각없이 봤다.
+# 근데 나랑은 수준 자체가 틀리네.
+# 나는 못 쓰는 클래스 적합하게 작성할 줄 알고, 이거 보기 전까진 알지도 못 했던 enumerate도 쓸 줄 알고,
+# 문제점이 생겼을 때 그걸 대처하는 방법도 엄청 깔끔하고...
+# 무엇보다, 저걸 풀었다는게 너무 대단하다는 생각이 든다. 나는 하찮게 느껴지고.
+# (지금 보니 월요일 날 보너스 문제 풀 때 묶였던 팀에서 유일하게 문제 푼 사람이었네. 와...)
+# 괜히 봤다는 생각이 든다. 열등감만 늘고 좌절만 하게 되니...
+# (아니, 문제 출처를 보니 2022 카카오 블라인드 채용 문제던데, 그럼 이걸 풀 정도면 카카오에 입사해도 될 정도의 수준이라는 거 아닌가?
+#  도대체 어떻게 푼거지? 그 수준이면 도대체 여기 왜 있는거야? 이 스터디그룹에 현직 개발자도 공부 습관 들이려고 왔다는 얘기를 듣긴 했지만...
+#  그것도 자기 수준에 맞는 곳에서 해야 하는거 아닌가? 이걸 뚝딱 풀 수준이면서 공부했다고 하는거면 그냥 생색만 내는 수준 아닐까?
+#  나는 이거 신청하고 나서 매일 문제 나올 때마다 챌린저 문제에 머리 싸매가면서 수 시간을 소요해도 못 푸는 날이 절반인데...
+#  저렇게 깔끔하게 정리된 걸 보면 마음이 아파온다. 재능 차이라는게 실존하는구나라는 생각을 하며.
+#  비록 저 코드가 한 시간 정도 고민하다가 남 풀이 보고 그대로 배껴쓴 거라 할지라도, 보고도 이해 못 하는 사람들이 수두룩하니 뭐.)
+# 이거 보고 내가 짠 코드 비스무레한 글자뭉치를 보니 우울해진다. 그렇다고 쓴 걸 아예 버리긴 아쉬우니 여기에라도 적어둬야지.
+
+D08_F. 양과 늑대
+# https://school.programmers.co.kr/learn/courses/30/lessons/92343
+
+def DFS(graph, info, animals, node_num):
+    child_node_cnt = len(graph[node_num][1])
+    animal_exist_cnt = 0
+    i_obtain_sheep = 0
+    
+    if graph[node_num][0]:
+        animals[info[node_num]] += 1
+        graph[node_num][0] = 0
+        
+        if not info[node_num]:
+            i_obtain_sheep = 1
+            
+    if i_obtain_sheep:
+        
+        return 0
+        
+    if info[node_num]:
+        if child_node_cnt == 0:
+            animals[info[node_num]] -= 1
+            graph[node_num][0] = 1
+            
+            return 1
+        elif animals[1] >= animals[0]:
+            animals[info[node_num]] -= 1
+            graph[node_num][0] = 1
+            
+            return 1
+        
+    for next_node in graph[node_num][1]:
+        animal_exist_cnt += DFS(graph, info, animals, next_node)
+        
+    if info[node_num] and child_node_cnt == animal_exist_cnt:
+        animals[info[node_num]] -= 1
+        graph[node_num][0] = 1
+            
+        return 1
+    
+    return 0
+
+def solution(info, edges):
+    animals = [0, 0]
+    bef_sheep = -1
+    length = len(info)
+    graph = [[1, []] for _ in range(length)]
+    
+    for e in edges:
+        graph[e[0]][1].append(e[1])
+        
+    while bef_sheep != animals[0]:
+        bef_sheep = animals[0]
+        
+        DFS(graph, info, animals, 0)
+        print(animals[0])
+    
+    return animals[0]
+
+
+
+# 참고 웹사이트
+1. https://velog.io/@roope97/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0-%ED%8C%8C%EC%9D%B4%EC%8D%AC-%EC%84%B8%ED%8A%B8Set-%EC%A0%95%EB%A6%AC%EC%9B%90%EC%86%8C%EC%B6%94%EA%B0%80-%EC%82%AD%EC%A0%9C-%ED%95%A9%EC%A7%91%ED%95%A9-%EA%B5%90%EC%A7%91%ED%95%A9-%EC%B0%A8%EC%A7%91%ED%95%A9
+2. https://wayhome25.github.io/python/2017/06/14/time-complexity/
+3. https://velog.io/@emplam27/%ED%8C%8C%EC%9D%B4%EC%8D%AC-%EC%9E%90%EB%A3%8C%ED%98%95%EB%B3%84-%EC%A3%BC%EC%9A%94-%EB%A9%94%EC%84%9C%EB%93%9C-%EC%8B%9C%EA%B0%84%EB%B3%B5%EC%9E%A1%EB%8F%84-%EC%A0%95%EB%A6%AC
+4. https://dong-hyeok.tistory.com/entry/Python-List-Set-Dict-%EC%8B%9C%EA%B0%84-%EB%B3%B5%EC%9E%A1%EB%8F%84Big-O
+5. https://blog.naver.com/finway/221204308911
+6. https://velog.io/@kim_min_hyuk/Python-%EC%9E%90%EB%A3%8C%ED%98%95%EB%B3%84-%EC%8B%9C%EA%B0%84-%EB%B3%B5%EC%9E%A1%EB%8F%84-%EC%A0%95%EB%A6%AC
+7. https://www.daleseo.com/python-enumerate/
+8. https://velog.io/@qnq0615/99%ED%81%B4%EB%9F%BD-%EC%BD%94%ED%85%8C-%EC%8A%A4%ED%84%B0%EB%94%94-8%EC%9D%BC%EC%B0%A8-TIL-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%A8%B8%EC%8A%A4-%EC%96%91%EA%B3%BC-%EB%8A%91%EB%8C%80
+9. https://kycu-sb.tistory.com/108
+
+# 타 레벨 문제
+B. 
+M. https://www.acmicpc.net/problem/2667
+C. 
