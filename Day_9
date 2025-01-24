@@ -1,6 +1,6 @@
 # StudyGroup Day 9!
 
-#new+375. 전주 듣고 노래 맞히기
+#9. 전주 듣고 노래 맞히기
 # https://www.acmicpc.net/problem/31562
 
 from collections import defaultdict as dd
