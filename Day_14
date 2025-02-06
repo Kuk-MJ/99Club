@@ -1,0 +1,40 @@
+# StudyGroup Day 14!
+
+# 14. Olivander
+# https://www.acmicpc.net/problem/15366
+
+N = int(input())
+wand = sorted(map(int, input().split()))   # 값 입력 및 정렬
+box = sorted(map(int, input().split()))
+can_fit = 1
+
+for i in range(N):
+    if wand[i] > box[i]:   # 길이가 맞는지 확인
+        can_fit = 0
+        break
+        
+print('DA' if can_fit else 'NE')   # 출력
+
+# 급하게 푼 문제.
+# 설명이 약간 필요한 것 같은데,
+# 모든 지팡이가 박스 안에 들어갈 수 있으면 DA, 아니면 NE를 출력하면 된다.
+# 그럼 정렬해서 하나하나 맞춰보면 되지. 어려울 거 단 하나도 없다.
+
+
+
+# 뭔가 잘못되었다는 느낌이 든다.
+# 공부를 위해서 문제를 푸는게 아니라,
+# 매일매일 문제를 풀기 위해 공부하는 느낌?
+# 이번 챌린저 문제도 풀 수 있을 줄 알았는데... 뭔가... 뭔가가 있나보다... 으흐윽...
+# 최대 비용 거리 구하는 벨만-포드 알고리즘인데 왜 어려운 걸까... 으휴, 모르겠다.
+# 너무 피곤하다... 자야지...
+
+
+
+# 참고 웹사이트
+1.
+
+# 타 레벨 문제
+B. https://www.acmicpc.net/problem/26043
+M. https://www.acmicpc.net/problem/2615
+C. https://www.acmicpc.net/problem/1738
