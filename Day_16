@@ -1,0 +1,52 @@
+# StudyGroup Day 16!
+
+# 16. 절대값 힙
+# https://www.acmicpc.net/problem/11286
+
+from queue import PriorityQueue as Pq
+import sys
+input = sys.stdin.readline
+
+nums = Pq()   # 변수 지정
+opt = []
+
+for _ in range(int(input())):
+    num = int(input())   # 값 입력
+
+    if num:   # 입력값이 0이 아니라면 (입력 연산이라면)
+        nums.put((abs(num), num))   # 절대값 우선순위를 이용한 값 추가
+        # nums.put((abs(num), 1 if num > 0 else 0, num))
+    else:
+        opt.append(str(nums.get()[1]) if nums.qsize() else '0')   # 입력값이 0이라면 출력값 추가
+
+print('\n'.join(opt))   # 출력
+
+# 독특한 우선순위를 가진 우선순위 큐를 만드는 문제.
+# 바로 전에 비슷한 문제인 최소값 힙과 최대값 힙을 풀어서 해당 문제도 간단했다.
+
+
+
+# 병에 걸린건지 며칠 전부터 두통이 심하게 찾아온다.
+# 오늘 스터디도 참석하긴 했지만 두통 때문에 반은 집중 못 했다고 봐야하고...
+# 여러모로 참 힘들다.
+# 문제도 나름 쉬워보였는데 이렇게 고전하다가 결국 못 풀고 기본 개념 학습 겸 푼 문제를 제출하는거 보면...
+# 그래도 우선순위 큐에 대한 개념을 좀 인지하게 되서 다행이라는 생각이 든다.
+# 이전에 다익스트라를 우선순위 큐로 만들지 못했다고 했는데, 이제 조금 진전된 느낌이랄까.
+# (좀 더 공부해보니 대부분 PriorityQueue 말고 heapq를 쓴다고. 절차가 단순해서 더 빠르다나.
+#  일단 이걸 쓰긴 했지만... 다음에 사용할 일이 있으면 참고해야겠다.)
+
+
+
+# 참고 웹사이트
+1. https://cocobi.tistory.com/204
+2. https://www.daleseo.com/python-priority-queue/
+3. https://velog.io/@mein-figur/Python%EC%9A%B0%EC%84%A0%EC%88%9C%EC%9C%84-%ED%81%90-heapq
+4. https://velog.io/@hsshin0602/%ED%8C%8C%EC%9D%B4%EC%8D%AC-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%9A%B0%EC%84%A0%EC%88%9C%EC%9C%84%ED%81%90priority-%ED%9E%99%ED%81%90heap
+
+# 타 레벨 문제
+B. https://school.programmers.co.kr/learn/courses/30/lessons/42626
+M. https://www.acmicpc.net/problem/27961
+C. https://leetcode.com/problems/maximal-rectangle/description/
+B-B. https://www.acmicpc.net/problem/19638
+M-B. https://school.programmers.co.kr/learn/courses/30/lessons/42839
+C-B. https://school.programmers.co.kr/learn/courses/30/lessons/67259
