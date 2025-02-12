@@ -1,0 +1,37 @@
+# StudyGroup Day 18!
+
+# 18. Wipe it!
+# https://www.acmicpc.net/problem/29542
+
+word = input()
+occur = set()   # 값 입력 및 변수 생성
+opt = []
+
+for w in word:
+    if w not in occur:   # 이미 입력된 단어 지우기
+        opt.append(w)
+        occur.add(w)
+
+print(''.join(opt))   # 출력
+
+# 이미 존재하는 알파벳을 입력하면 입력을 취소하는 문제.
+# 일단 set을 썼는데, 더 좋은 방법이 있을까?
+# 엄청 짧은 코드도 결국은 해시 맵을 이용한 자료 구조고...
+# 밑에 서술해놓겠다. 2줄짜리라...
+
+# s=input()
+# print(*sorted({*s},key=s.find),sep='')
+
+
+
+# 오늘도 간단히.
+
+
+
+# 참고 웹사이트
+1. https://www.acmicpc.net/source/76968783
+
+# 타 레벨 문제
+B. https://www.acmicpc.net/problem/14235
+M. https://www.acmicpc.net/problem/17503
+C. https://www.acmicpc.net/problem/2169
