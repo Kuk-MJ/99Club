@@ -1,0 +1,47 @@
+# StudyGroup Day 19!
+
+# 19. 함수 문자열
+# https://www.acmicpc.net/problem/30047
+
+func_chr = list(input())   # 값 입력 및 변수 생성
+stk = []
+
+try:
+    for cur_chr in func_chr[::-1]:   # 입력값의 역순으로 탐색
+
+        if cur_chr == 'x':     # 'x'라면
+            stk.append(0)      # 새 값 append
+        elif cur_chr == 'g':   # 'g'라면
+            stk[-1] += 1       # 최근 생성된 값에 +1
+        else:
+            stk.append(min(stk.pop(), stk.pop()))   # 'f'라면 최근 생성된 두 값 중 작은 값 반환
+
+        # print(stk)
+except IndexError:   # 인덱스 에러가 발생했다면 = 함수값이 제대로 정수로 변환될 수 없다면
+    stk = [-1]       # -1로 지정
+finally:
+    if len(stk) - 1:   # 정수 개수 및 계산 결과에 따른 출력
+        print(-1)
+    else:
+        print(stk[0])
+
+# 스택에 관련된 문제.
+# 일단 감이 오긴 했는데, 정작 어떻게 해야 문제를 풀 수 있을지는 몰랐다.
+# 모르는 알고리즘이 있을까 싶어 알고리즘 분류를 보았지만 스택 딱 하나 뿐.
+# 그래서 좀 더 머리를 굴려본 결과 주어진 함수의 특성 상 '역순으로 탐색하면 반드시 해결된다'라는 결론이 나왔음.
+# (괄호같이 연산 우선순위가 주어진 것도 아니니까.)
+# 그래서 했고, 통과.
+
+
+
+# 오늘도 간단히.
+
+
+
+# 참고 웹사이트
+1. 
+
+# 타 레벨 문제
+B. https://www.acmicpc.net/problem/11286
+M. https://www.acmicpc.net/problem/1946
+C. https://www.acmicpc.net/problem/28107
