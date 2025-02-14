@@ -1,0 +1,60 @@
+# StudyGroup Day 19!
+
+# 20. 후보 추천하기
+# https://www.acmicpc.net/problem/1713
+
+photo = {}
+max_size = int(input())   # 값 입력 및 변수 할당
+N = int(input())
+recom = list(map(int, input().split()))
+
+for i in range(N):
+    if len(photo) >= max_size and recom[i] not in photo:   # 새로 넣어야 하는데 자리가 없다면
+        photo.pop(sorted(photo.items(), key=lambda k: k[1])[0][0])   # 추천 수가 가장 적으면서 오래된 학생 번호 제거
+
+    if recom[i] in photo:
+        photo[recom[i]][0] += 1   # 학생 번호를 키, [추천 수, 추천 시기]를 값으로 하여 딕셔너리에 추가
+    else:
+        photo[recom[i]] = [1, i]
+
+    # print(photo)
+
+print(*sorted(photo.keys()))   # 출력
+
+# 우선순위 큐에 관련된 줄 '알았던' 문제.
+# 처음에 가장 적은 추천 수를 받은 학생을 내린다고 했을 때, 자연스럽게 우선순위를 생각했다.
+# 동일할 경우 가장 오래된 것을 내리라고 했기에 더더욱. 큐랑 비슷하잖아?
+# (지금은 간단히 해결책을 떠올렸지만, 당시엔 그냥 그러려니 생각했다. 어떻게든 뺼 수는 있겠지.)
+# 근데 문제가 생겼다. 입력된 값의 우선순위가 변경될 수 있다는 것.
+# ...내가 알기로 우선순위 큐에 그런 기능은 없을텐데? 입력된 값의 우선순위를 변경해야 한다고?
+# 없으면 만들면 된다고 생각할 수 있지만,
+# 우선순위 큐 구현 특성상 많은 값들이 위치를 바꿔야 할거고, 입력될 때마다 수행해야 한다면, 그거 참... 골치 아플 것 같다.
+# 혹여나 해서 알고리즘 분류를 보니 구현과 시뮬레이션 뿐이네. 으음...
+# 그러다 좋은 생각이 났다. 그냥 딕셔너리를 이용해 구현하기로.
+# (왜 항상 알고리즘 분류를 본 다음에 해결책이 떠오르는지 모르겠다. 힌트 보고 맞추는 거나 다름 없으니 찝찝하다...)
+# 값을 일종의 우선순위 비슷하게 저장하면 되지 않을까 싶어서였다.
+# 허나 문제가 있었으니, 어느정도 추천 수가 적립된 채 꽉 찬 리스트에 새 값을 집어넣어야 할 때,
+# 반드시 기존에 있던 값이 지워져야 함에도 새로운 값의 추천 수가 작다는 이유 때문에 넣자마자 삭제가 되는 불상사가 발생한 것.
+# 그래서 조건을 조금 추가해줬다. 딕셔너리니까 별 부담 없겠지.
+
+
+
+# 오늘도 간단히.
+# 그나저나 우선순위 큐 문제인줄 알았지만 아니어서 조금 당황했다.
+# 우선순위 큐로도 가능할 것 같긴 한데... 배보다 배꼽이 더 커지는 격 아닐까 싶다.
+
+
+
+# 참고 웹사이트
+1. https://littlefoxdiary.tistory.com/3
+2. https://velog.io/@plate0113/Python-%EC%9A%B0%EC%84%A0%EC%88%9C%EC%9C%84-%ED%81%90-heapq
+3. https://infossm.github.io/blog/2020/08/16/heap/
+4. https://ynzu-dev.tistory.com/entry/JAVA-Priority-Queue%EC%9A%B0%EC%84%A0%EC%88%9C%EC%9C%84-%ED%81%90-%EC%9A%B0%EC%84%A0%EC%88%9C%EC%9C%84-%EC%A1%B0%EA%B1%B4-%EB%B3%80%EA%B2%BD%ED%95%98%EA%B8%B0#google_vignette
+5. https://velog.io/@chosj1526/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0-%EC%9A%B0%EC%84%A0%EC%88%9C%EC%9C%84-%ED%81%90-Priority-Queue-%EC%A0%95%EB%A0%AC-%EC%A0%84%EB%9E%B5-%EC%84%A4%EC%A0%95%EB%B2%95
+6. https://www.acmicpc.net/board/view/125968
+7. https://www.acmicpc.net/board/view/103189
+
+# 타 레벨 문제
+B. https://www.acmicpc.net/problem/28107
+M. https://www.acmicpc.net/problem/19598
+C. https://www.acmicpc.net/problem/2151
