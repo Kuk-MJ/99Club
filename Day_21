@@ -1,0 +1,49 @@
+# StudyGroup Day 21!
+
+# 21. 트ㅏㅊ;
+# https://www.acmicpc.net/problem/4378
+
+qwerty_slided = {'1': '`', '2': '1', '3': '2', '4': '3', '5': '4', '6': '5',
+                 '7': '6', '8': '7', '9': '8', '0': '9', '-': '0', '=': '-',
+                 'W': 'Q', 'E': 'W', 'R': 'E', 'T': 'R', 'Y': 'T', 'U': 'Y',
+                 'I': 'U', 'O': 'I', 'P': 'O', '[': 'P', ']': '[', '\\': ']',   # '밀려쓰기 딕셔너리' 생성
+                 'S': 'A', 'D': 'S', 'F': 'D', 'G': 'F', 'H': 'G', 'J': 'H',
+                 'K': 'J', 'L': 'K', ';': 'L', '\'': ';',
+                 'X': 'Z', 'C': 'X', 'V': 'C', 'B': 'V', 'N': 'B', 'M': 'N',
+                 ',': 'M', '.': ',', '/': '.', ' ': ' '}
+
+try:
+    while True:
+        ipt = rf'{input()}'
+        opt = ''.join([qwerty_slided[i] for i in ipt])   # 입력 및 밀려쓰기에 맞춘 출력값 생성
+
+        print(opt)   # 출력
+except EOFError:   # EOF까지 반복
+    pass
+
+# 1234567890-=WERTYUIOP[ ]\SDFGHJKL;'XCVBNM,./   # 테스트케이스
+
+# 밀려쓴 문장을 원래대로 고치는 문제.
+# (제목도 원래대로 돌리면 '쿼티'가 된다.)
+# 다 좋았는데, 여러 줄이 입력된다는 걸 몰라서 2트.
+# 문제좀 똑바로 읽자.
+
+
+
+# 아아, 오늘은 너무 피곤하다.
+# 정처기 보러 기차타고... 버스타고... 하암...
+# 그래도 가채점에서 합격이라니 만족스럽다.
+# 근데 문제가 속썩이네. 간단해보이는 걸 골랐는데 이런 노가다 문제일 줄이야.
+# 이제 내일부턴 다시 챌린저에 집중해봐야지...
+
+
+
+# 참고 웹사이트
+1. 
+
+# 타 레벨 문제
+B. https://www.acmicpc.net/problem/20291
+M. https://www.acmicpc.net/problem/1003
+C. https://school.programmers.co.kr/learn/courses/30/lessons/92344
+B & M-B. https://www.acmicpc.net/problem/2212
+C-B. https://school.programmers.co.kr/learn/courses/30/lessons/388354
